@@ -1,3 +1,43 @@
+import RecentStreams, { Stream }  from "@/components/RecentStreams";
+
+const sampleStreams: Stream[] = [
+  {
+    id: 'STR-001',
+    name: 'Dev Grant - Alice',
+    recipient: 'GABC...xyz1',
+    rate: '5,000 USDC/mo',
+    status: 'Active',
+  },
+  {
+    id: 'STR-002',
+    name: 'Marketing Budget',
+    recipient: 'GDEF...abc2',
+    rate: '3,200 USDC/mo',
+    status: 'Active',
+  },
+  {
+    id: 'STR-003',
+    name: 'Core Contributor',
+    recipient: 'GHIJ...def3',
+    rate: '8,500 USDC/mo',
+    status: 'Paused',
+  },
+  {
+    id: 'STR-004',
+    name: 'Community Rewards',
+    recipient: 'GKLM...ghi4',
+    rate: '1,200 USDC/mo',
+    status: 'Active',
+  },
+  {
+    id: 'STR-005',
+    name: 'Q4 2025 Grant',
+    recipient: 'GNOP...jkl5',
+    rate: '10,000 USDC/mo',
+    status: 'Completed',
+  },
+];
+
 export default function Streams() {
   return (
     <div>
@@ -24,6 +64,7 @@ export default function Streams() {
           </tbody>
         </table>
       </div>
+      <RecentStreams streams={sampleStreams} />
     </div>
   );
 }

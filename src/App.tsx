@@ -82,7 +82,7 @@ export default function App() {
           element={
             <>
               <Navbar onThemeToggle={handleThemeToggle} theme={theme} />
-              <Landing />
+              <Landing theme={theme} />
             </>
           }
         />

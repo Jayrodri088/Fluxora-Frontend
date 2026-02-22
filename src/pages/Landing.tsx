@@ -1,10 +1,15 @@
-export default function Landing() {
-  return <div style={styles.container}></div>;
+import HeroSection from "../components/landing-page/HeroSection";
+
+interface LandingProps {
+  theme?: "light" | "dark";
 }
 
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    minHeight: "calc(100vh - 72px)",
-    padding: "4rem 2rem",
-  },
-};
+export default function Landing({ theme = "light" }: LandingProps) {
+  return (
+    <div className="flex flex-col">
+      <HeroSection theme={theme} />
+      {/* Spacer to compensate for absolutely-positioned sub-cards */}
+      <div className="h-20 lg:h-20" />
+    </div>
+  );
+}

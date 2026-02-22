@@ -1,16 +1,10 @@
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import Sidebar from './Sidebar';
 
 export default function Layout() {
   return (
     <div style={styles.layout}>
-      <aside style={styles.sidebar}>
-        <div style={styles.logo}>Fluxora</div>
-        <nav style={styles.nav}>
-          <Link to="/" style={styles.navLink}>Dashboard</Link>
-          <Link to="/streams" style={styles.navLink}>Streams</Link>
-          <Link to="/recipient" style={styles.navLink}>Recipient</Link>
-        </nav>
-      </aside>
+      <Sidebar />
       <main style={styles.main}>
         <Outlet />
       </main>
@@ -23,32 +17,11 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     minHeight: '100vh',
   },
-  sidebar: {
-    width: 220,
-    background: 'var(--surface)',
-    borderRight: '1px solid var(--border)',
-    padding: '1.5rem 1rem',
-  },
-  logo: {
-    fontSize: '1.25rem',
-    fontWeight: 700,
-    color: 'var(--accent)',
-    marginBottom: '2rem',
-  },
-  nav: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.25rem',
-  },
-  navLink: {
-    padding: '0.6rem 0.75rem',
-    borderRadius: 8,
-    color: 'var(--text)',
-    textDecoration: 'none',
-  },
   main: {
     flex: 1,
-    padding: '2rem',
-    overflow: 'auto',
+    marginLeft: '260px',
+    padding: '24px',
+    backgroundColor: '#f9fafb',
+    transition: 'margin-left 0.3s ease',
   },
 };

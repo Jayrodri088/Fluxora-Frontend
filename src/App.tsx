@@ -3,6 +3,7 @@ import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Streams from './pages/Streams';
 import Recipient from './pages/Recipient';
+import NotFound from './pages/NotFound';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
           <Route path="streams" element={<Streams />} />
           <Route path="recipient" element={<Recipient />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

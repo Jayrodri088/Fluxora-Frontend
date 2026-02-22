@@ -3,6 +3,12 @@
 :root {
   --bg: #0a0e17;
   --surface: #121a2a;
+  --surface-elevated: #0f1624;
+  --surface-raised: #151e2e;
+  --surface-highest: #192436;
+  --surface-switch: #1e2c40;
+  --danger: #ff4d4f;
+  --primary: #00b8d4;
   --border: #1e2d42;
   --text: #e8ecf4;
   --muted: #6b7a94;

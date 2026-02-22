@@ -1,27 +1,43 @@
-import WalletButton from "@/components/wallet-connect/Walletbutton";
-import React from "react";
+import { useState } from "react";
+import CreateStreamModal from "../components/CreateStreamModal";
 
 export default function Dashboard() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div>
-      {/* Page header row */}
       <div
-        className="flex items-start justify-between gap-4 mb-2"
-        style={{ marginTop: 0 }}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: 0,
+          marginBottom: "1rem",
+        }}
       >
-        <div>
-          <h1 style={{ marginTop: 0 }}>Dashboard</h1>
-          <p style={{ color: "var(--muted)" }}>
-            Treasury overview and active stream summary. Connect your wallet to
-            see real-time capital flow.
-          </p>
-        </div>
-
-        <div className="shrink-0 pt-1">
-          <WalletButton />
-        </div>
+        <h1 style={{ margin: 0 }}>Dashboard</h1>
+        <button style={createBtnStyle} onClick={() => setIsModalOpen(true)}>
+          <svg
+            width="20"
+            height="20"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Create stream
+        </button>
       </div>
-
+      <p style={{ color: "var(--muted)" }}>
+        Treasury overview and active stream summary. Connect your wallet to see
+        real-time capital flow.
+      </p>
       <div style={cardGrid}>
         <div style={card}>
           <div style={cardLabel}>Active Streams</div>
@@ -36,9 +52,29 @@ export default function Dashboard() {
           <div style={cardValue}>— USDC</div>
         </div>
       </div>
+
+      <CreateStreamModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }
+
+const createBtnStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: "0.5rem",
+  background: "var(--accent)",
+  color: "#ffffff",
+  border: "none",
+  padding: "0.625rem 1.25rem",
+  borderRadius: "8px",
+  fontWeight: 600,
+  fontSize: "1rem",
+  cursor: "pointer",
+  boxShadow: "0 4px 24px rgba(0, 212, 170, 0.4)",
+};
 
 const cardGrid: React.CSSProperties = {
   display: "grid",

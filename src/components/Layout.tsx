@@ -47,13 +47,6 @@ export default function Layout() {
         </main>
         <Footer />
       </div>
-    </div>
-  );
-}
-      <main style={styles.main}>
-        <Outlet />
-      </main>
-      
       <ConnectWalletModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

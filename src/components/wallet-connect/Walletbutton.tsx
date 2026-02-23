@@ -1,9 +1,9 @@
 import React, { useState, useRef } from "react";
 import { useWallet } from "./Walletcontext";
 import WalletConnectModal from "./Walletconnectmodal";
-import { cn } from "@/lib/utils";
 
 import { ChevronDown, Copy, Check, ExternalLink, LogOut } from "lucide-react";
+import { cn } from "../../lib/utils";
 
 function truncate(addr: string) {
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`;

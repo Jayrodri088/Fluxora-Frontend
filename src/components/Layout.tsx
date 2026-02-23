@@ -67,8 +67,8 @@ export default function Layout() {
 
 const styles: Record<string, React.CSSProperties> = {
   layout: {
-    display: 'flex',
-    minHeight: '100vh',
+    display: "flex",
+    minHeight: "100vh",
   },
   sidebar: {
     width: 220,
@@ -79,10 +79,10 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
   },
   logo: {
-    fontSize: '1.25rem',
+    fontSize: "1.25rem",
     fontWeight: 700,
-    color: 'var(--accent)',
-    marginBottom: '2rem',
+    color: "var(--accent)",
+    marginBottom: "2rem",
   },
   nav: {
     display: 'flex',
@@ -91,10 +91,10 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
   },
   navLink: {
-    padding: '0.6rem 0.75rem',
+    padding: "0.6rem 0.75rem",
     borderRadius: 8,
-    color: 'var(--text)',
-    textDecoration: 'none',
+    color: "var(--text)",
+    textDecoration: "none",
   },
   connectButton: {
     marginTop: 'auto',
@@ -110,7 +110,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   main: {
     flex: 1,
-    padding: '2rem',
-    overflow: 'auto',
+    padding: "2rem",
+    overflow: "auto",
   },
 };

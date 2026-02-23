@@ -6,7 +6,7 @@ import Streams from "./pages/Streams";
 import Recipient from "./pages/Recipient";
 import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
-import ConnectWallet from "./pages/ConnectWallet";
+import NotFound from './pages/NotFound';
 
 export default function App() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -83,7 +83,7 @@ export default function App() {
           element={
             <>
               <Navbar onThemeToggle={handleThemeToggle} theme={theme} />
-              <Landing />
+              <Landing theme={theme} />
             </>
           }
         />
@@ -93,6 +93,7 @@ export default function App() {
           <Route path="streams" element={<Streams />} />
           <Route path="recipient" element={<Recipient />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

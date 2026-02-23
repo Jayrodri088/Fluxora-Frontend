@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
+import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Streams from "./pages/Streams";
 import Recipient from "./pages/Recipient";
+import { useState, useEffect } from "react";
 import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
 import NotFound from './pages/NotFound';
@@ -78,6 +79,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Home />} />
+        <Route element={<Layout />}>
+          <Route path="dashboard" element={<Dashboard />} />
         <Route
           path="/"
           element={
@@ -87,6 +91,7 @@ export default function App() {
             </>
           }
         />
+        <Route path="connect-wallet" element={<ConnectWallet />} />
         <Route path="/app" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="streams" element={<Streams />} />

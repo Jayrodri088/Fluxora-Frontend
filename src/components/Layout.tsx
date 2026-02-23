@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import ConnectWalletModal from "./ConnectWalletModal";
+import Footer from "./Footer";
 import "./Layout.css";
 
 type NavItem = {
@@ -56,7 +57,14 @@ export default function Layout() {
           >
             <span className={`app-toggle-chevron${isSidebarCollapsed ? " is-rotated" : ""}`} aria-hidden="true">
               <svg viewBox="0 0 24 24">
-                <path d="M15 19l-7-7 7-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path
+                  d="M15 19l-7-7 7-7"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </span>
           </button>
@@ -105,6 +113,8 @@ export default function Layout() {
         <main className="app-main">
           <Outlet />
         </main>
+
+        <Footer />
       </div>
 
       <button

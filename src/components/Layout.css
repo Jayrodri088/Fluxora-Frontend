@@ -135,6 +135,8 @@
 }
 
 .app-content-area {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   min-width: 0;
 }
@@ -144,8 +146,8 @@
 }
 
 .app-main {
+  flex: 1;
   padding: 2rem;
-  height: 100%;
   overflow: auto;
 }
 

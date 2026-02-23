@@ -1,7 +1,22 @@
+import React, { useEffect, useState } from 'react';
+import TreasuryOverviewLoading from '../components/TreasuryOverviewLoading';
+
 export default function Dashboard() {
+  // `loading` reflects when treasury data is being fetched.
+  // Replace this hook with your real data-loading flag when integrating.
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Demo: simulate async fetch — remove when wiring real fetch.
+    const t = setTimeout(() => setLoading(false), 5000);
+    return () => clearTimeout(t);
+  }, []);
+
+  if (loading) return <TreasuryOverviewLoading />;
+
   return (
     <div>
-      <h1 style={{ marginTop: 0 }}>Dashboard</h1>
+      <h1 style={{ marginTop: 0 }}>Treasury overview</h1>
       <p style={{ color: 'var(--muted)' }}>
         Treasury overview and active stream summary. Connect your wallet to see real-time capital flow.
       </p>
@@ -19,9 +34,29 @@ export default function Dashboard() {
           <div style={cardValue}>— USDC</div>
         </div>
       </div>
+
+      <CreateStreamModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   );
 }
+
+const createBtnStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.5rem',
+  background: 'var(--accent)',
+  color: '#ffffff',
+  border: 'none',
+  padding: '0.625rem 1.25rem',
+  borderRadius: '8px',
+  fontWeight: 600,
+  fontSize: '1rem',
+  cursor: 'pointer',
+  boxShadow: '0 4px 24px rgba(0, 212, 170, 0.4)',
+};
 
 const cardGrid: React.CSSProperties = {
   display: 'grid',

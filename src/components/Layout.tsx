@@ -50,20 +50,6 @@ export default function Layout() {
     </div>
   );
 }
-      <main style={styles.main}>
-        <Outlet />
-      </main>
-      
-      <ConnectWalletModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConnectFreighter={handleConnectFreighter}
-        onConnectAlbedo={handleConnectAlbedo}
-        onConnectWalletConnect={handleConnectWalletConnect}
-      />
-    </div>
-  );
-}
 
 const styles: Record<string, React.CSSProperties> = {
   layout: {

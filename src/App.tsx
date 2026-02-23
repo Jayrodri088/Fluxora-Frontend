@@ -7,6 +7,7 @@ import Recipient from "./pages/Recipient";
 import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
 import NotFound from './pages/NotFound';
+import ErrorPage from './pages/ErrorPage';
 
 export default function App() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -91,6 +92,7 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path="streams" element={<Streams />} />
           <Route path="recipient" element={<Recipient />} />
+          <Route path="error" element={<ErrorPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -2,6 +2,8 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
+import Footer from './Footer';
+import './layout.css';
 import ConnectWalletModal from './ConnectWalletModal';
 
 export default function Layout() {
@@ -35,6 +37,13 @@ export default function Layout() {
           <Link to="/" style={styles.navLink}>Dashboard</Link>
           <Link to="/streams" style={styles.navLink}>Streams</Link>
           <Link to="/recipient" style={styles.navLink}>Recipient</Link>
+    <div className="app-layout">
+      <aside className="app-layout__sidebar">
+        <div className="app-layout__logo">Fluxora</div>
+        <nav className="app-layout__nav">
+          <Link to="/" className="app-layout__nav-link">Dashboard</Link>
+          <Link to="/streams" className="app-layout__nav-link">Streams</Link>
+          <Link to="/recipient" className="app-layout__nav-link">Recipient</Link>
         </nav>
         <button 
           style={styles.connectButton}
@@ -43,6 +52,15 @@ export default function Layout() {
           Connect wallet
         </button>
       </aside>
+      <div className="app-layout__content">
+        <main className="app-layout__main">
+          <Outlet />
+        </main>
+        <Footer />
+      </div>
+    </div>
+  );
+}
       <main style={styles.main}>
         <Outlet />
       </main>

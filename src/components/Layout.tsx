@@ -67,6 +67,36 @@ export default function Layout() {
 }
 
 const styles: Record<string, React.CSSProperties> = {
+  layout: {
+    display: "flex",
+    minHeight: "100vh",
+  },
+  sidebar: {
+    width: 220,
+    background: "var(--surface)",
+    borderRight: "1px solid var(--border)",
+    padding: "1.5rem 1rem",
+    display: "flex",
+    flexDirection: "column",
+  },
+  logo: {
+    fontSize: "1.25rem",
+    fontWeight: 700,
+    color: "var(--accent)",
+    marginBottom: "2rem",
+  },
+  nav: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.25rem",
+    flex: 1,
+  },
+  navLink: {
+    padding: "0.6rem 0.75rem",
+    borderRadius: 8,
+    color: "var(--text)",
+    textDecoration: "none",
+  },
   connectButton: {
     marginTop: "auto",
     padding: "0.75rem 1rem",

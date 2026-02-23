@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
+import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Streams from "./pages/Streams";
 import Recipient from "./pages/Recipient";
+import { useState, useEffect } from "react";
 import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
 import NotFound from "./pages/NotFound";
-import { WalletProvider } from "./components/wallet-connect/Walletcontext";
+import ConnectWallet from "./pages/ConnectWallet";
 
 export default function App() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -77,26 +78,28 @@ export default function App() {
   };
 
   return (
-    <WalletProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <Navbar onThemeToggle={handleThemeToggle} theme={theme} />
-                <Landing theme={theme} />
-              </>
-            }
-          />
-          <Route path="/app" element={<Layout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="streams" element={<Streams />} />
-            <Route path="recipient" element={<Recipient />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </WalletProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route element={<Layout />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <Navbar onThemeToggle={handleThemeToggle} theme={theme} />
+              <Landing theme={theme} />
+            </>
+          }
+        />
+        <Route path="connect-wallet" element={<ConnectWallet />} />
+        <Route path="/app" element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="streams" element={<Streams />} />
+          <Route path="recipient" element={<Recipient />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

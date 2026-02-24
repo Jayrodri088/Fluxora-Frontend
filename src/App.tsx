@@ -8,6 +8,7 @@ import ConnectWallet from "./pages/ConnectWallet";
 import { useState, useEffect } from "react";
 import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
+import ErrorPage from './pages/ErrorPage';
 import NotFound from "./pages/NotFound";
 
 export default function App() {
@@ -96,6 +97,7 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path="streams" element={<Streams />} />
           <Route path="recipient" element={<Recipient />} />
+          <Route path="error" element={<ErrorPage />} />
         </Route>
         <Route path="/connect-wallet" element={<ConnectWallet />} />
         <Route path="*" element={<NotFound />} />

@@ -1,51 +1,66 @@
 import { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import Footer from './Footer';
+import AppNavbar from './AppNavbar';
 import './layout.css';
 import ConnectWalletModal from './ConnectWalletModal';
 
-export default function Layout() {
+interface LayoutProps {
+  onThemeToggle?: () => void;
+  theme?: 'light' | 'dark';
+}
+
+export default function Layout({ onThemeToggle, theme = 'light' }: LayoutProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
   const handleConnectFreighter = () => {
-    console.log('Connecting to Freighter...');
+    setWalletAddress('GABC1234567890XYZ1');
     setIsModalOpen(false);
   };
 
   const handleConnectAlbedo = () => {
-    console.log('Connecting to Albedo...');
+    setWalletAddress('GABC1234567890XYZ1');
     setIsModalOpen(false);
   };
 
   const handleConnectWalletConnect = () => {
-    console.log('Connecting to WalletConnect...');
+    setWalletAddress('GABC1234567890XYZ1');
     setIsModalOpen(false);
+  };
+
+  const handleDisconnect = () => {
+    setWalletAddress(null);
   };
 
   return (
     <div className="app-layout">
-      <aside className="app-layout__sidebar">
-        <div className="app-layout__logo">Fluxora</div>
-        <nav className="app-layout__nav">
-          <Link to="/" className="app-layout__nav-link">Dashboard</Link>
-          <Link to="/streams" className="app-layout__nav-link">Streams</Link>
-          <Link to="/recipient" className="app-layout__nav-link">Recipient</Link>
-        </nav>
-        <button
-          style={styles.connectButton}
-          onClick={() => setIsModalOpen(true)}
-        >
-          Connect wallet
-        </button>
-      </aside>
-
-      <div className="app-layout__content">
-        <main className="app-layout__main">
-          <Outlet />
-        </main>
-        <Footer />
+      <AppNavbar
+        onThemeToggle={onThemeToggle}
+        theme={theme}
+        network="TESTNET"
+        walletAddress={walletAddress}
+        onDisconnect={handleDisconnect}
+      />
+      <div className="app-layout__body">
+        <aside className="app-layout__sidebar">
+          <div className="app-layout__logo">Fluxora</div>
+          <nav className="app-layout__nav">
+            <Link to="/app" className="app-layout__nav-link">Dashboard</Link>
+            <Link to="/app/streams" className="app-layout__nav-link">Streams</Link>
+            <Link to="/app/recipient" className="app-layout__nav-link">Recipient</Link>
+          </nav>
+          <button style={styles.connectButton} onClick={() => setIsModalOpen(true)}>
+            {walletAddress ? 'Switch wallet' : 'Connect wallet'}
+          </button>
+        </aside>
+        <div className="app-layout__content">
+          <main className="app-layout__main">
+            <Outlet />
+          </main>
+          <Footer />
+        </div>
       </div>
-
       <ConnectWalletModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

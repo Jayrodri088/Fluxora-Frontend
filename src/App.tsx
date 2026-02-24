@@ -45,6 +45,8 @@ export default function App() {
         "--cta-shadow",
         "0 4px 12px rgba(0, 212, 170, 0.2)",
       );
+      root.style.setProperty("--network-testnet-bg", "#fef3c7");
+      root.style.setProperty("--network-testnet-text", "#92400e");
     } else {
       root.style.setProperty("--bg", "#0a0e17");
       root.style.setProperty("--surface", "#121a2a");
@@ -68,6 +70,8 @@ export default function App() {
         "--cta-shadow",
         "0 4px 12px rgba(0, 212, 170, 0.3)",
       );
+      root.style.setProperty("--network-testnet-bg", "rgba(250,224,141,0.15)");
+      root.style.setProperty("--network-testnet-text", "#fbd96a");
     }
   }, [theme]);
 
@@ -87,7 +91,7 @@ export default function App() {
             </>
           }
         />
-        <Route path="/app" element={<Layout />}>
+        <Route path="/app" element={<Layout onThemeToggle={handleThemeToggle} theme={theme} />}>
           <Route index element={<Dashboard />} />
           <Route path="streams" element={<Streams />} />
           <Route path="recipient" element={<Recipient />} />

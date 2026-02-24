@@ -1,6 +1,13 @@
 .app-layout {
   display: flex;
+  flex-direction: column; /* ← change row to column */
   min-height: 100vh;
+}
+
+.app-layout__body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
 }
 
 .app-layout__sidebar {

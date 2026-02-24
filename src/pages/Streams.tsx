@@ -204,11 +204,11 @@ const plusIcon: React.CSSProperties = {
 };
 
 const tableWrap: React.CSSProperties = {
-  marginTop: '1.5rem',
-  background: 'var(--surface)',
-  border: '1px solid var(--border)',
+  marginTop: "1.5rem",
+  background: "var(--surface)",
+  border: "1px solid var(--border)",
   borderRadius: 12,
-  overflow: 'hidden',
+  overflow: "hidden",
 };
 
 const table: React.CSSProperties = {

@@ -26,11 +26,82 @@
   overflow-y: auto;
 }
 
+/* Create stream modal: responsive, no scrollbar, consistent spacing */
+.create-stream-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-stream-modal {
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+  max-height: min(90vh, 600px);
+  padding: clamp(1rem, 4vw, 1.25rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.create-stream-modal::-webkit-scrollbar {
+  display: none;
+}
+
+.create-stream-modal .modal-body-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.create-stream-modal .modal-body-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-height: 640px) {
+  .create-stream-modal {
+    max-height: 95vh;
+  }
+}
+
+@media (max-width: 380px) {
+  .create-stream-overlay {
+    padding: 0.5rem;
+  }
+  .create-stream-modal {
+    padding: 0.75rem;
+  }
+}
+
+/* Active step: teal circle with white number for contrast */
+.step-item.active .step-circle {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Cancel: dark charcoal, white text */
+.btn-cancel {
+  background: #1a1d26;
+  color: #ffffff;
+  border: none;
+}
+
+/* Next: teal gradient to match progress accent */
+.btn-next {
+  background: linear-gradient(135deg, #00B8D4, #0097A7);
+  color: #ffffff;
+  border: none;
+}
+
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
+  flex-shrink: 0;
 }
 
 .modal-header h2 {
@@ -59,9 +130,10 @@
 .progress-tracker {
   display: flex;
   position: relative;
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
   justify-content: space-between;
-  padding: 0 1rem;
+  padding: 0 0.5rem;
+  flex-shrink: 0;
 }
 
 .progress-line {
@@ -117,7 +189,6 @@
 .step-item.active .step-circle {
   background: var(--primary);
   border-color: var(--primary);
-  color: var(--text);
 }
 
 .step-label {
@@ -137,35 +208,40 @@
 .divider {
   border: none;
   border-top: 1px solid var(--border);
-  margin: 0 -1.5rem 1.5rem -1.5rem;
+  margin: 0 0 1rem 0;
 }
 
 .section-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .section-header h3 {
   font-size: 1.125rem;
   font-weight: 600;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.25rem 0;
 }
 
 .section-header p {
   font-size: 0.875rem;
   color: var(--muted);
   margin: 0;
+  line-height: 1.4;
 }
 
 /* Form Styles */
 .form-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.form-group:last-of-type {
+  margin-bottom: 0;
 }
 
 .form-label {
   display: block;
   font-size: 0.875rem;
   font-weight: 500;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.375rem;
   color: var(--text);
 }
 
@@ -177,7 +253,7 @@
   display: block;
   font-size: 0.75rem;
   color: var(--muted);
-  margin-top: 0.375rem;
+  margin-top: 0.25rem;
 }
 
 .form-row {
@@ -298,9 +374,9 @@
   background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 1.25rem;
-  margin-top: 1.5rem;
-  margin-bottom: 2rem;
+  padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 0;
 }
 
 .deposit-box {
@@ -331,21 +407,34 @@
 /* Footer */
 .modal-footer {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 .btn {
   flex: 1;
-  padding: 0.75rem;
+  padding: 0.375rem 0.75rem;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   border: none;
   transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 .btn:hover {
   opacity: 0.9;
+}
+
+/* Override global button min-height (e.g. index.css @media 768px) so modal buttons stay short */
+.create-stream-modal .modal-footer .btn {
+  min-height: unset;
 }
 
 .btn-back {
@@ -357,4 +446,63 @@
 .btn-next {
   background: var(--primary);
   color: var(--text);
+}
+
+/* Form error message */
+.form-error {
+  color: var(--danger);
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 77, 79, 0.1);
+  border-radius: 8px;
+  border: 1px solid var(--danger);
+}
+
+/* Info box: teal/light blue border and muted blue background (works in dark theme) */
+.info-box {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 184, 212, 0.5);
+  background: rgba(0, 184, 212, 0.08);
+}
+
+.info-box-title {
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.info-box-text {
+  font-size: 0.875rem;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.45;
+  opacity: 0.9;
+}
+
+/* Deposit amount: prefix $ and suffix USDC pill */
+.input-with-prefix-suffix {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.input-prefix {
+  padding-left: 1rem;
+  font-size: 1rem;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.input-suffix-pill {
+  padding: 0.35rem 0.75rem;
+  margin-right: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+  background: var(--surface-highest);
+  border-radius: 9999px;
+  flex-shrink: 0;
 }

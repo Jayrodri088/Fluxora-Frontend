@@ -77,8 +77,14 @@ export default function Layout({ onThemeToggle, theme = "light" }: LayoutProps) 
           >
             <span className={`app-toggle-chevron${isSidebarCollapsed ? " is-rotated" : ""}`} aria-hidden="true">
               <svg viewBox="0 0 24 24">
-                <path d="M15 19l-7-7 7-7" fill="none" stroke="currentColor"
-                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path
+                  d="M15 19l-7-7 7-7"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </span>
           </button>

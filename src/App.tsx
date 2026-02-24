@@ -4,11 +4,11 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Streams from "./pages/Streams";
 import Recipient from "./pages/Recipient";
+import ConnectWallet from "./pages/ConnectWallet";
 import { useState, useEffect } from "react";
 import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
-import NotFound from './pages/NotFound';
-import ConnectWallet from './pages/ConnectWallet';
+import NotFound from "./pages/NotFound";
 
 export default function App() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -83,6 +83,15 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Navigate to="/app" replace />} />
         <Route path="/streams" element={<Navigate to="/app/streams" replace />} />
+        <Route
+          path="/landing"
+          element={
+            <>
+              <Navbar onThemeToggle={handleThemeToggle} theme={theme} />
+              <Landing theme={theme} />
+            </>
+          }
+        />
         <Route path="/app" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="streams" element={<Streams />} />

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import WalletButton from "./wallet-connect/Walletbutton";
 
 interface NavbarProps {
   onThemeToggle?: () => void;
@@ -351,22 +352,7 @@ export default function Navbar({
                 )}
               </button>
 
-              <button
-                style={{
-                  ...styles.connectWalletBtn,
-                  background:
-                    "linear-gradient(180deg, #00B8D4 0%, #0097A7 100%)",
-                  boxShadow:
-                    "0px 10px 15px -3px rgba(0, 184, 212, 0.25), 0px 4px 6px -4px rgba(0, 184, 212, 0.25)",
-                  borderRadius: "6px",
-                  padding: "8px 24px",
-                  gap: "8px",
-                }}
-                onClick={() => alert("Wallet connection not yet implemented")}
-                aria-label="Connect wallet"
-              >
-                Connect wallet
-              </button>
+              <WalletButton />
             </div>
           )}
         </div>
@@ -485,21 +471,7 @@ export default function Navbar({
             )}
           </button>
 
-          <button
-            style={{
-              ...styles.connectWalletBtn,
-              background: "linear-gradient(180deg, #00B8D4 0%, #0097A7 100%)",
-              boxShadow:
-                "0px 10px 15px -3px rgba(0, 184, 212, 0.25), 0px 4px 6px -4px rgba(0, 184, 212, 0.25)",
-              borderRadius: "6px",
-              padding: "8px 24px",
-              gap: "8px",
-            }}
-            onClick={() => alert("Wallet connection not yet implemented")}
-            aria-label="Connect wallet"
-          >
-            Connect wallet
-          </button>
+          <WalletButton />
         </div>
       </nav>
 

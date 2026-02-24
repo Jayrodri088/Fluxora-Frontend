@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Streams from "./pages/Streams";
 import Recipient from "./pages/Recipient";
+import ConnectWallet from "./pages/ConnectWallet";
 import { useState, useEffect } from "react";
 import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
@@ -84,7 +85,7 @@ export default function App() {
         <Route element={<Layout />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route
-          path="/"
+          path="/landing"
           element={
             <>
               <Navbar onThemeToggle={handleThemeToggle} theme={theme} />
@@ -92,7 +93,7 @@ export default function App() {
             </>
           }
         />
-        <Route path="connect-wallet" element={<ConnectWallet />} />
+        <Route path="/connect-wallet" element={<ConnectWallet />} />
         <Route path="/app" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="streams" element={<Streams />} />

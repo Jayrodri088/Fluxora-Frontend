@@ -1,11 +1,16 @@
 import { useState } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import Footer from './Footer';
 import './layout.css';
 import ConnectWalletModal from './ConnectWalletModal';
+import DashboardIcon from "../assets/dashboard.png";
+import RecipientIcon from "../assets/recipient.png";
+import StreamsIcon from '../assets/streams.png';
+// layout only manages sidebar + content; navbar is handled by App
 
 export default function Layout() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const location = useLocation();
 
   const handleConnectFreighter = () => {
     console.log('Connecting to Freighter...');
@@ -28,32 +33,29 @@ export default function Layout() {
   return (
     <div className="app-layout">
       <aside className="app-layout__sidebar">
-        <div className="app-layout__logo">Fluxora</div>
+      
         <nav className="app-layout__nav">
-          <Link to="/" className="app-layout__nav-link">Dashboard</Link>
-          <Link to="/streams" className="app-layout__nav-link">Streams</Link>
-          <Link to="/recipient" className="app-layout__nav-link">Recipient</Link>
+          <Link to="" className="app-layout__nav-link flex ">
+            <img src={DashboardIcon} alt="Dashboard" className="w-5 h-5 mr-2" />
+            Dashboard
+          </Link>
+          <Link to="streams" className="app-layout__nav-link flex">
+            <img src={StreamsIcon} alt="Streams" className="w-5 h-5 mr-2" />
+            Streams
+          </Link>
+          <Link to="recipient" className="app-layout__nav-link flex">
+            <img src={RecipientIcon} alt="Recipient" className="w-5 h-5 mr-2" />
+            Recipient
+          </Link>
         </nav>
-        <button 
-          style={styles.connectButton}
-          onClick={() => setIsModalOpen(true)}
-        >
-          Connect wallet
-        </button>
       </aside>
       <div className="app-layout__content">
         <main className="app-layout__main">
           <Outlet />
         </main>
-        <Footer />
-      </div>
-    </div>
-  );
-}
-      <main style={styles.main}>
-        <Outlet />
-      </main>
-      
+        
+        {location.pathname.includes('treasurypage') ? null : <Footer />}
+
       <ConnectWalletModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -61,9 +63,11 @@ export default function Layout() {
         onConnectAlbedo={handleConnectAlbedo}
         onConnectWalletConnect={handleConnectWalletConnect}
       />
+      </div>
     </div>
   );
 }
+      
 
 const styles: Record<string, React.CSSProperties> = {
   layout: {

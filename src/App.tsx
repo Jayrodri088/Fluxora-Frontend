@@ -7,6 +7,7 @@ import Recipient from "./pages/Recipient";
 import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
 import NotFound from './pages/NotFound';
+import TreasuryPage from "./pages/TreasuryPage"; 
 
 export default function App() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -77,20 +78,16 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      {/* always show the top navbar */}
+      <Navbar onThemeToggle={handleThemeToggle} theme={theme} />
+
       <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <Navbar onThemeToggle={handleThemeToggle} theme={theme} />
-              <Landing theme={theme} />
-            </>
-          }
-        />
-        <Route path="/app" element={<Layout />}>
+        <Route path="/" element={<Landing theme={theme} />} />
+        <Route path="/app" element={<Layout />}> 
           <Route index element={<Dashboard />} />
           <Route path="streams" element={<Streams />} />
           <Route path="recipient" element={<Recipient />} />
+          <Route path="treasurypage" element={<TreasuryPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

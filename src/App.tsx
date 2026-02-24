@@ -9,7 +9,6 @@ import { useState, useEffect } from "react";
 import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
 import NotFound from "./pages/NotFound";
-import ConnectWallet from "./pages/ConnectWallet";
 
 export default function App() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {

@@ -1,24 +1,34 @@
 import { useState } from 'react';
 import './CreateStreamModal.css';
 
+function maskAddress(addr: string): string {
+  const t = addr.trim();
+  if (t.length <= 12) return t || '—';
+  return `${t.slice(0, 6)} . . . ${t.slice(-6)}`;
+}
+
 interface CreateStreamModalProps {
   isOpen: boolean;
   onClose: () => void;
+  /** Called when user clicks "Create stream" on step 3; use to open success modal. */
+  onStreamCreated?: () => void;
 }
 
-export default function CreateStreamModal({ isOpen, onClose }: CreateStreamModalProps) {
+export default function CreateStreamModal({ isOpen, onClose, onStreamCreated }: CreateStreamModalProps) {
+  const [recipient, setRecipient] = useState('');
+  const [depositAmount, setDepositAmount] = useState('');
   const [accrualRate, setAccrualRate] = useState('38.62');
   const [duration, setDuration] = useState('1');
   const [startTimeOption, setStartTimeOption] = useState<'now' | 'custom'>('now');
   const [customStartDate, setCustomStartDate] = useState('');
   const [cliffEnabled, setCliffEnabled] = useState(false);
   const [cliffDate, setCliffDate] = useState('');
-  
   const [currentStep, setCurrentStep] = useState(2);
-  
   const [error, setError] = useState<string | null>(null);
-  const userDeposit = 200.00; 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const userDeposit = 200.0;
   const requiredDeposit = (parseFloat(accrualRate || '0') * parseFloat(duration || '0')).toFixed(2);
+  const displayDeposit = depositAmount.trim() ? parseFloat(depositAmount.replace(/,/g, '')).toFixed(2) : requiredDeposit;
 
   const handleNext = () => {
     if (currentStep === 2) {
@@ -70,8 +80,12 @@ export default function CreateStreamModal({ isOpen, onClose }: CreateStreamModal
       setError(null);
       setCurrentStep(3);
     } else if (currentStep === 3) {
-      alert("Stream Created!");
-      onClose();
+      setIsSubmitting(true);
+      onStreamCreated?.();
+      setTimeout(() => {
+        onClose();
+        setIsSubmitting(false);
+      }, 400);
     }
   };
 
@@ -86,8 +100,8 @@ export default function CreateStreamModal({ isOpen, onClose }: CreateStreamModal
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay create-stream-overlay" onClick={onClose}>
+      <div className="modal-content create-stream-modal" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="modal-header">
           <h2>Create stream</h2>
@@ -128,6 +142,7 @@ export default function CreateStreamModal({ isOpen, onClose }: CreateStreamModal
           </div>
         </div>
 
+        <div className="modal-body-scroll">
         {currentStep === 2 && (
           <>
             <hr className="divider" />
@@ -289,25 +304,127 @@ export default function CreateStreamModal({ isOpen, onClose }: CreateStreamModal
         </>
         )}
 
-        {currentStep === 3 && (
+        {currentStep === 3 && (() => {
+          const mockRecipient = recipient.trim() || 'GDU4D7EXAMPLEADDRESS0L50DR';
+          const mockDeposit = depositAmount.trim() ? parseFloat(depositAmount.replace(/,/g, '')).toFixed(2) : '200.00';
+          return (
           <>
             <hr className="divider" />
-            <div style={{ padding: '3rem 0', textAlign: 'center' }}>
-              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--surface-highest)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: 'var(--primary)' }}>
-                 <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                 </svg>
+            <div className="review-cards">
+              {/* Recipient card */}
+              <div className="review-card review-card-vertical">
+                <div className="review-card-header">
+                  <span className="review-card-icon" aria-hidden="true">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </span>
+                  <div className="review-card-title">Recipient</div>
+                  <button type="button" className="review-card-edit" onClick={() => setCurrentStep(1)} aria-label="Edit recipient">
+                    Edit
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="review-card-content">
+                  <div className="review-card-sublabel">Address</div>
+                  <div className="review-card-value">{maskAddress(mockRecipient)}</div>
+                </div>
               </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--text)' }}>Review & create</h3>
-              <p style={{ color: 'var(--muted)', fontSize: '0.875rem' }}>Review page is coming soon...</p>
+
+              {/* Deposit card */}
+              <div className="review-card review-card-vertical">
+                <div className="review-card-header">
+                  <span className="review-card-icon" aria-hidden="true">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </span>
+                  <div className="review-card-title">Deposit</div>
+                  <button type="button" className="review-card-edit" onClick={() => setCurrentStep(1)} aria-label="Edit deposit">
+                    Edit
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="review-card-content">
+                  <div className="review-card-amount">{mockDeposit} <span className="review-card-unit">USDC</span></div>
+                </div>
+              </div>
+
+              {/* Rate & schedule card */}
+              <div className="review-card review-card-schedule-card">
+                <div className="review-card-schedule-header">
+                  <span className="review-card-icon" aria-hidden="true">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                  </span>
+                  <div className="review-card-title">Rate & schedule</div>
+                  <button type="button" className="review-card-edit" onClick={() => setCurrentStep(2)} aria-label="Edit rate and schedule">
+                    Edit
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="review-card-rows">
+                  <div className="review-card-row">
+                    <span className="review-card-row-icon" aria-hidden="true">
+                      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                    </span>
+                    <span className="review-card-row-label">Rate</span>
+                    <span className="review-card-row-value">{accrualRate} USDC per month</span>
+                  </div>
+                  <div className="review-card-row">
+                    <span className="review-card-row-icon" aria-hidden="true">
+                      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </span>
+                    <span className="review-card-row-label">Duration</span>
+                    <span className="review-card-row-value">{duration} {parseInt(duration, 10) === 1 ? 'month' : 'months'}</span>
+                  </div>
+                  <div className="review-card-row">
+                    <span className="review-card-row-icon" aria-hidden="true">
+                      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    </span>
+                    <span className="review-card-row-label">Start</span>
+                    <span className="review-card-row-value">{startTimeOption === 'now' ? 'Immediately' : customStartDate ? new Date(customStartDate).toLocaleString() : '—'}</span>
+                  </div>
+                  <div className="review-card-row">
+                    <span className="review-card-row-icon" aria-hidden="true">
+                      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><circle cx="12" cy="12" r="10" /><path strokeLinecap="round" d="M12 6v6" /></svg>
+                    </span>
+                    <span className="review-card-row-label">Cliff</span>
+                    <span className="review-card-row-value">{cliffEnabled && cliffDate ? new Date(cliffDate).toLocaleDateString() : 'Not set'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="review-warning-box" role="region" aria-live="polite">
+              <strong>By creating this stream:</strong> {mockDeposit} USDC will be locked in a Soroban smart contract. The recipient can withdraw their accrued amount at any time during the stream.
             </div>
           </>
-        )}
+          );
+        })()}
+        </div>
 
         {/* Footer */}
         <div className="modal-footer">
-          <button className="btn btn-back" onClick={handleBack}>Back</button>
-          <button className="btn btn-next" onClick={handleNext}>{currentStep === 2 ? 'Next' : 'Create stream'}</button>
+          <button type="button" className="btn btn-back" onClick={handleBack} disabled={isSubmitting}>
+            Back
+          </button>
+          <button
+            type="button"
+            className="btn btn-next"
+            onClick={handleNext}
+            disabled={isSubmitting}
+            aria-busy={isSubmitting}
+          >
+            {currentStep === 3 && isSubmitting ? 'Creating…' : currentStep === 2 ? 'Next' : 'Create stream'}
+          </button>
         </div>
 
       </div>

@@ -6,8 +6,6 @@ import TreasuryOverviewLoading from '../components/TreasuryOverviewLoading';
 import CreateStreamModal from '../components/CreateStreamModal';
 
 export default function Dashboard() {
-  // `loading` reflects when treasury data is being fetched.
-  // Replace this hook with your real data-loading flag when integrating.
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sampleStreams: Stream[] = [
@@ -79,10 +77,18 @@ export default function Dashboard() {
       </div>
 
       <RecentStreams streams={sampleStreams} />
-      {/* <CreateStreamModal
+      <button
+        type="button"
+        style={createBtnStyle}
+        onClick={() => setIsModalOpen(true)}
+        aria-label="Create stream"
+      >
+        Create stream
+      </button>
+      <CreateStreamModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-      /> */}
+      />
     </div>
   );
 }

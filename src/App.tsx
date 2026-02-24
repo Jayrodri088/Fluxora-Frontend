@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
@@ -10,7 +10,6 @@ import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
 import ErrorPage from './pages/ErrorPage';
 import NotFound from "./pages/NotFound";
-import ConnectWallet from "./pages/ConnectWallet";
 
 export default function App() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -83,8 +82,8 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route element={<Layout />} />
-        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Navigate to="/app" replace />} />
+        <Route path="/streams" element={<Navigate to="/app/streams" replace />} />
         <Route
           path="/landing"
           element={
@@ -94,13 +93,13 @@ export default function App() {
             </>
           }
         />
-        <Route path="/connect-wallet" element={<ConnectWallet />} />
         <Route path="/app" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="streams" element={<Streams />} />
           <Route path="recipient" element={<Recipient />} />
           <Route path="error" element={<ErrorPage />} />
         </Route>
+        <Route path="/connect-wallet" element={<ConnectWallet />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import CreateStreamModal from "../components/CreateStreamModal";
 import StreamCreatedModal from "../components/Streams/StreamCreatedModal";
 import RecentStreams, { Stream } from "../components/RecentStreams";
 
@@ -41,16 +42,20 @@ const sampleStreams: Stream[] = [
 ];
 
 export default function Streams() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [createdStream, setCreatedStream] = useState({
     id: "529",
     url: "https://fluxora.io/stream/529",
   });
 
-  const handleCreateMock = () => {
-    // In a real app, this would be the result of an API call
+  const handleCreateStreamClick = () => {
+    setIsCreateModalOpen(true);
+  };
+
+  const handleStreamCreated = () => {
     setCreatedStream({ id: "529", url: "https://fluxora.io/stream/529" });
-    setIsModalOpen(true);
+    setIsSuccessModalOpen(true);
   };
 
   return (
@@ -69,7 +74,7 @@ export default function Streams() {
             the treasury.
           </p>
         </div>
-        <button onClick={handleCreateMock} style={createBtn}>
+        <button onClick={handleCreateStreamClick} style={createBtn}>
           <svg
             width="18"
             height="18"
@@ -115,15 +120,19 @@ export default function Streams() {
         </table>
       </div>
 
+      <CreateStreamModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onStreamCreated={handleStreamCreated}
+      />
       <StreamCreatedModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
         streamId={createdStream.id}
         streamUrl={createdStream.url}
         onCreateAnother={() => {
-          setIsModalOpen(false);
-          // Logic to reopen create form would go here
-          console.log("Opening create stream form...");
+          setIsSuccessModalOpen(false);
+          setIsCreateModalOpen(true);
         }}
       />
       <RecentStreams streams={sampleStreams} />

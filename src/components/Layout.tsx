@@ -5,26 +5,46 @@ import { Outlet, Link } from 'react-router-dom';
 import Footer from './Footer';
 import './layout.css';
 import ConnectWalletModal from './ConnectWalletModal';
+import { useState } from "react";
+import { Link, Outlet } from "react-router-dom";
+import ConnectWalletModal from "./ConnectWalletModal";
+import Footer from "./Footer";
+import "./Layout.css";
+
+type NavItem = {
+  to: string;
+  label: string;
+  shortLabel: string;
+};
+
+const NAV_ITEMS: NavItem[] = [
+  { to: "/app", label: "Dashboard", shortLabel: "D" },
+  { to: "/app/streams", label: "Streams", shortLabel: "S" },
+  { to: "/app/recipient", label: "Recipient", shortLabel: "R" },
+];
 
 export default function Layout() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const handleConnectFreighter = () => {
-    console.log('Connecting to Freighter...');
-    // Placeholder for Freighter connection logic
+    console.log("Connecting to Freighter...");
     setIsModalOpen(false);
   };
 
   const handleConnectAlbedo = () => {
-    console.log('Connecting to Albedo...');
-    // Placeholder for Albedo connection logic
+    console.log("Connecting to Albedo...");
     setIsModalOpen(false);
   };
 
   const handleConnectWalletConnect = () => {
-    console.log('Connecting to WalletConnect...');
-    // Placeholder for WalletConnect connection logic
+    console.log("Connecting to WalletConnect...");
     setIsModalOpen(false);
+  };
+
+  const closeMobileSidebar = () => {
+    setIsMobileSidebarOpen(false);
   };
 
   return (
@@ -44,27 +64,89 @@ export default function Layout() {
           <Link to="/" className="app-layout__nav-link">Dashboard</Link>
           <Link to="/streams" className="app-layout__nav-link">Streams</Link>
           <Link to="/recipient" className="app-layout__nav-link">Recipient</Link>
+    <div
+      className={`app-layout${isSidebarCollapsed ? " is-collapsed" : ""}${isMobileSidebarOpen ? " is-mobile-open" : ""}`}
+    >
+      <aside id="app-sidebar" className="app-sidebar" aria-label="Primary navigation">
+        <div className="app-sidebar-header">
+          <div className="app-logo" aria-label="Fluxora">
+            {isSidebarCollapsed ? "Fx" : "Fluxora"}
+          </div>
+          <button
+            type="button"
+            className="app-sidebar-toggle"
+            aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            onClick={() => setIsSidebarCollapsed((prev) => !prev)}
+          >
+            <span className={`app-toggle-chevron${isSidebarCollapsed ? " is-rotated" : ""}`} aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M15 19l-7-7 7-7"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+
+        <nav className="app-nav">
+          {NAV_ITEMS.map((item) => (
+            <Link key={item.to} to={item.to} className="app-nav-link" onClick={closeMobileSidebar}>
+              <span className="app-nav-badge" aria-hidden="true">
+                {item.shortLabel}
+              </span>
+              <span className="app-nav-label">{item.label}</span>
+            </Link>
+          ))}
         </nav>
-        <button 
-          style={styles.connectButton}
-          onClick={() => setIsModalOpen(true)}
-        >
-          Connect wallet
+
+        <button className="app-connect-button" onClick={() => setIsModalOpen(true)}>
+          <span className="app-connect-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M9 12h6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <path d="M12 9v6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <rect x="4" y="6" width="16" height="12" rx="3" fill="none" stroke="currentColor" strokeWidth="1.6" />
+            </svg>
+          </span>
+          <span className="app-connect-label">Connect wallet</span>
         </button>
       </aside>
-      <div className="app-layout__content">
-        <main className="app-layout__main">
+
+      <div className="app-content-area">
+        <header className="app-mobile-topbar">
+          <button
+            type="button"
+            className="app-mobile-menu-btn"
+            onClick={() => setIsMobileSidebarOpen((prev) => !prev)}
+            aria-label={isMobileSidebarOpen ? "Close sidebar" : "Open sidebar"}
+            aria-expanded={isMobileSidebarOpen}
+            aria-controls="app-sidebar"
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+          <div className="app-mobile-title">Fluxora</div>
+        </header>
+
+        <main className="app-main">
           <Outlet />
         </main>
+
         <Footer />
       </div>
-    </div>
-  );
-}
-      <main style={styles.main}>
-        <Outlet />
-      </main>
-      
+
+      <button
+        type="button"
+        aria-label="Close sidebar"
+        className="app-sidebar-backdrop"
+        onClick={closeMobileSidebar}
+      />
+
       <ConnectWalletModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

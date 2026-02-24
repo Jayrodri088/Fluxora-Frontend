@@ -1,69 +1,86 @@
-import { useState } from 'react';
-import StreamCreatedModal from '../components/Streams/StreamCreatedModal';
-import RecentStreams, { Stream }  from "@/components/RecentStreams";
+import { useState } from "react";
+import StreamCreatedModal from "../components/Streams/StreamCreatedModal";
+import RecentStreams, { Stream } from "../components/RecentStreams";
 
 const sampleStreams: Stream[] = [
   {
-    id: 'STR-001',
-    name: 'Dev Grant - Alice',
-    recipient: 'GABC...xyz1',
-    rate: '5,000 USDC/mo',
-    status: 'Active',
+    id: "STR-001",
+    name: "Dev Grant - Alice",
+    recipient: "GABC...xyz1",
+    rate: "5,000 USDC/mo",
+    status: "Active",
   },
   {
-    id: 'STR-002',
-    name: 'Marketing Budget',
-    recipient: 'GDEF...abc2',
-    rate: '3,200 USDC/mo',
-    status: 'Active',
+    id: "STR-002",
+    name: "Marketing Budget",
+    recipient: "GDEF...abc2",
+    rate: "3,200 USDC/mo",
+    status: "Active",
   },
   {
-    id: 'STR-003',
-    name: 'Core Contributor',
-    recipient: 'GHIJ...def3',
-    rate: '8,500 USDC/mo',
-    status: 'Paused',
+    id: "STR-003",
+    name: "Core Contributor",
+    recipient: "GHIJ...def3",
+    rate: "8,500 USDC/mo",
+    status: "Paused",
   },
   {
-    id: 'STR-004',
-    name: 'Community Rewards',
-    recipient: 'GKLM...ghi4',
-    rate: '1,200 USDC/mo',
-    status: 'Active',
+    id: "STR-004",
+    name: "Community Rewards",
+    recipient: "GKLM...ghi4",
+    rate: "1,200 USDC/mo",
+    status: "Active",
   },
   {
-    id: 'STR-005',
-    name: 'Q4 2025 Grant',
-    recipient: 'GNOP...jkl5',
-    rate: '10,000 USDC/mo',
-    status: 'Completed',
+    id: "STR-005",
+    name: "Q4 2025 Grant",
+    recipient: "GNOP...jkl5",
+    rate: "10,000 USDC/mo",
+    status: "Completed",
   },
 ];
 
 export default function Streams() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [createdStream, setCreatedStream] = useState({ id: '529', url: 'https://fluxora.io/stream/529' });
+  const [createdStream, setCreatedStream] = useState({
+    id: "529",
+    url: "https://fluxora.io/stream/529",
+  });
 
   const handleCreateMock = () => {
     // In a real app, this would be the result of an API call
-    setCreatedStream({ id: '529', url: 'https://fluxora.io/stream/529' });
+    setCreatedStream({ id: "529", url: "https://fluxora.io/stream/529" });
     setIsModalOpen(true);
   };
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+        }}
+      >
         <div>
           <h1 style={{ marginTop: 0 }}>Streams</h1>
-          <p style={{ color: 'var(--muted)' }}>
-            Create and manage USDC streams. Set rate, duration, and cliff from the treasury.
+          <p style={{ color: "var(--muted)" }}>
+            Create and manage USDC streams. Set rate, duration, and cliff from
+            the treasury.
           </p>
         </div>
-        <button 
-          onClick={handleCreateMock}
-          style={createBtn}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '0.5rem' }}>
+        <button onClick={handleCreateMock} style={createBtn}>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{ marginRight: "0.5rem" }}
+          >
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
@@ -83,7 +100,14 @@ export default function Streams() {
           </thead>
           <tbody>
             <tr>
-              <td colSpan={4} style={{ textAlign: 'center', color: 'var(--muted)', padding: '2rem' }}>
+              <td
+                colSpan={4}
+                style={{
+                  textAlign: "center",
+                  color: "var(--muted)",
+                  padding: "2rem",
+                }}
+              >
                 No streams yet. Create one to get started.
               </td>
             </tr>
@@ -91,7 +115,7 @@ export default function Streams() {
         </table>
       </div>
 
-      <StreamCreatedModal 
+      <StreamCreatedModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         streamId={createdStream.id}
@@ -99,7 +123,7 @@ export default function Streams() {
         onCreateAnother={() => {
           setIsModalOpen(false);
           // Logic to reopen create form would go here
-          console.log('Opening create stream form...');
+          console.log("Opening create stream form...");
         }}
       />
       <RecentStreams streams={sampleStreams} />
@@ -108,26 +132,26 @@ export default function Streams() {
 }
 
 const createBtn: React.CSSProperties = {
-  background: 'var(--accent)',
-  color: '#000',
-  border: 'none',
+  background: "var(--accent)",
+  color: "#000",
+  border: "none",
   borderRadius: 8,
-  padding: '0.6rem 1rem',
+  padding: "0.6rem 1rem",
   fontWeight: 600,
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
 };
 
 const tableWrap: React.CSSProperties = {
-  marginTop: '1.5rem',
-  background: 'var(--surface)',
-  border: '1px solid var(--border)',
+  marginTop: "1.5rem",
+  background: "var(--surface)",
+  border: "1px solid var(--border)",
   borderRadius: 12,
-  overflow: 'hidden',
+  overflow: "hidden",
 };
 
 const table: React.CSSProperties = {
-  width: '100%',
-  borderCollapse: 'collapse',
+  width: "100%",
+  borderCollapse: "collapse",
 };

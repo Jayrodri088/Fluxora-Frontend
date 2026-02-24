@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
 import NotFound from "./pages/NotFound";
+import ConnectWallet from "./pages/ConnectWallet";
 
 export default function App() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -81,6 +82,8 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route element={<Layout />} />
+        <Route path="dashboard" element={<Dashboard />} />
         <Route
           path="/landing"
           element={

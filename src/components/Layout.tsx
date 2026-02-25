@@ -1,9 +1,19 @@
+import { Outlet } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import { useState } from 'react';
+import { Outlet, Link, useLocation } from 'react-router-dom';
+import Footer from './Footer';
+import './layout.css';
+import ConnectWalletModal from './ConnectWalletModal';
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import ConnectWalletModal from "./ConnectWalletModal";
 import Footer from "./Footer";
+import DashboardIcon from "../assets/dashboard.png";
+import RecipientIcon from "../assets/recipient.png";
+import StreamsIcon from '../assets/streams.png';
 import "./Layout.css";
-
+ 
 type NavItem = {
   to: string;
   label: string;
@@ -16,7 +26,8 @@ const NAV_ITEMS: NavItem[] = [
   { to: "/app/recipient", label: "Recipient", shortLabel: "R" },
 ];
 
-export default function Layout() {
+export default function Layout() 
+{const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -41,6 +52,33 @@ export default function Layout() {
   };
 
   return (
+    <div style={styles.layout}>
+      <Sidebar />
+
+      <aside style={styles.sidebar}>
+        <div style={styles.logo}>Fluxora</div>
+        <nav style={styles.nav}>
+          <Link to="/" style={styles.navLink}>Dashboard</Link>
+          <Link to="/streams" style={styles.navLink}>Streams</Link>
+          <Link to="/recipient" style={styles.navLink}>Recipient</Link>
+    <div className="app-layout">
+      <aside className="app-layout__sidebar">
+      
+        <nav className="app-layout__nav">
+          <Link to="" className="app-layout__nav-link flex ">
+            <img src={DashboardIcon} alt="Dashboard" className="w-5 h-5 mr-2" />
+            Dashboard
+          </Link>
+          <Link to="streams" className="app-layout__nav-link flex">
+            <img src={StreamsIcon} alt="Streams" className="w-5 h-5 mr-2" />
+            Streams
+          </Link>
+          <Link to="recipient" className="app-layout__nav-link flex">
+            <img src={RecipientIcon} alt="Recipient" className="w-5 h-5 mr-2" />
+            Recipient
+          </Link>
+        </nav>
+         
     <div
       className={`app-layout${isSidebarCollapsed ? " is-collapsed" : ""}${isMobileSidebarOpen ? " is-mobile-open" : ""}`}
     >
@@ -113,6 +151,8 @@ export default function Layout() {
         <main className="app-main">
           <Outlet />
         </main>
+        
+        {location.pathname.includes('treasurypage') ? null : <Footer />}
 
         <Footer />
       </div>
@@ -131,6 +171,23 @@ export default function Layout() {
         onConnectAlbedo={handleConnectAlbedo}
         onConnectWalletConnect={handleConnectWalletConnect}
       />
+      </div>
     </div>
   );
 }
+      
+
+const styles: Record<string, React.CSSProperties> = {
+  connectButton: {
+    marginTop: 'auto',
+    padding: '0.75rem 1rem',
+    background: 'var(--accent)',
+    color: '#0a0e17',
+    border: 'none',
+    borderRadius: 8,
+    fontWeight: 600,
+    fontSize: '0.95rem',
+    cursor: 'pointer',
+    transition: 'background 0.2s',
+  },
+};

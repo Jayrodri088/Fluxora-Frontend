@@ -161,6 +161,9 @@ const tableWrap: React.CSSProperties = {
 };
 
 const table: React.CSSProperties = {
+  width: '100%',
+  borderCollapse: 'collapse',
+};
   width: "100%",
   borderCollapse: "collapse",
 };

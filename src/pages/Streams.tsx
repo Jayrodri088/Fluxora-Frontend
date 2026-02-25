@@ -215,3 +215,6 @@ const table: React.CSSProperties = {
   width: '100%',
   borderCollapse: 'collapse',
 };
+  width: "100%",
+  borderCollapse: "collapse",
+};

@@ -84,6 +84,9 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      {/* always show the top navbar */}
+      <Navbar onThemeToggle={handleThemeToggle} theme={theme} />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Navigate to="/app" replace />} />
@@ -101,6 +104,7 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path="streams" element={<Streams />} />
           <Route path="recipient" element={<Recipient />} />
+          <Route path="treasurypage" element={<TreasuryPage />} />
           <Route path="error" element={<ErrorPage />} />
         </Route>
         <Route path="/connect-wallet" element={<ConnectWallet />} />

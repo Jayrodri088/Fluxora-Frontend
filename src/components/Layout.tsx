@@ -1,3 +1,10 @@
+import { Outlet } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import { useState } from 'react';
+import { Outlet, Link, useLocation } from 'react-router-dom';
+import Footer from './Footer';
+import './layout.css';
+import ConnectWalletModal from './ConnectWalletModal';
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import ConnectWalletModal from "./ConnectWalletModal";
@@ -52,6 +59,33 @@ export default function Layout({ onThemeToggle, theme = "light" }: LayoutProps) 
   };
 
   return (
+    <div style={styles.layout}>
+      <Sidebar />
+
+      <aside style={styles.sidebar}>
+        <div style={styles.logo}>Fluxora</div>
+        <nav style={styles.nav}>
+          <Link to="/" style={styles.navLink}>Dashboard</Link>
+          <Link to="/streams" style={styles.navLink}>Streams</Link>
+          <Link to="/recipient" style={styles.navLink}>Recipient</Link>
+    <div className="app-layout">
+      <aside className="app-layout__sidebar">
+      
+        <nav className="app-layout__nav">
+          <Link to="" className="app-layout__nav-link flex ">
+            <img src={DashboardIcon} alt="Dashboard" className="w-5 h-5 mr-2" />
+            Dashboard
+          </Link>
+          <Link to="streams" className="app-layout__nav-link flex">
+            <img src={StreamsIcon} alt="Streams" className="w-5 h-5 mr-2" />
+            Streams
+          </Link>
+          <Link to="recipient" className="app-layout__nav-link flex">
+            <img src={RecipientIcon} alt="Recipient" className="w-5 h-5 mr-2" />
+            Recipient
+          </Link>
+        </nav>
+         
     <div
       className={`app-layout${isSidebarCollapsed ? " is-collapsed" : ""}${isMobileSidebarOpen ? " is-mobile-open" : ""}`}
     >
@@ -131,6 +165,8 @@ export default function Layout({ onThemeToggle, theme = "light" }: LayoutProps) 
         <main className="app-main">
           <Outlet />
         </main>
+        
+        {location.pathname.includes('treasurypage') ? null : <Footer />}
 
         <Footer />
       </div>
@@ -149,6 +185,7 @@ export default function Layout({ onThemeToggle, theme = "light" }: LayoutProps) 
         onConnectAlbedo={handleConnectAlbedo}
         onConnectWalletConnect={handleConnectWalletConnect}
       />
+      </div>
     </div>
   );
 }

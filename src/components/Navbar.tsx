@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
 import WalletButton from "./wallet-connect/Walletbutton";
 
 interface NavbarProps {
@@ -223,19 +224,26 @@ export default function Navbar({
                 : {}),
           }}
         >
-          <Link to="/" style={styles.navLink} onClick={closeMobileMenu}>
-            Product
-          </Link>
-          <a
-            href="#documentation"
-            style={styles.navLink}
-            onClick={closeMobileMenu}
-          >
-            Documentation
-          </a>
-          <a href="#pricing" style={styles.navLink} onClick={closeMobileMenu}>
-            Pricing
-          </a>
+          {location.pathname.includes("treasurypage") ? (
+            // show dashboard title instead of default nav
+            <span className="font-bold justify-start">Dashboard</span>
+          ) : (
+            <>
+              <Link to="/" style={styles.navLink} onClick={closeMobileMenu}>
+                Product
+              </Link>
+              <a
+                href="#documentation"
+                style={styles.navLink}
+                onClick={closeMobileMenu}
+              >
+                Documentation
+              </a>
+              <a href="#pricing" style={styles.navLink} onClick={closeMobileMenu}>
+                Pricing
+              </a>
+            </>
+          )}
 
           {mobileMenuOpen && isMobile && (
             <div style={styles.mobileMenuActions}>
@@ -535,6 +543,12 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     padding: 0,
     whiteSpace: "nowrap",
+  },
+  navTitle: {
+    color: "var(--navbar-link-color)",
+    fontSize: "1rem",
+    fontWeight: 600,
+    textTransform: "uppercase",
   },
   navLinksContainer: {
     display: "flex",

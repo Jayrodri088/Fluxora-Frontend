@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './CreateStreamModal.css';
 
 function maskAddress(addr: string): string {
@@ -7,10 +7,18 @@ function maskAddress(addr: string): string {
   return `${t.slice(0, 6)} . . . ${t.slice(-6)}`;
 }
 
+/** Stellar public key: starts with G, 56 chars, base32 (no 0,1,8,9). */
+function isValidStellarAddress(value: string): boolean {
+  const trimmed = value.trim();
+  if (trimmed.length !== 56) return false;
+  if (trimmed[0] !== 'G') return false;
+  return /^G[ABCDEFGHJKLMNPQRSTUVWXYZ234567]{55}$/.test(trimmed);
+}
+
 interface CreateStreamModalProps {
   isOpen: boolean;
   onClose: () => void;
-  /** Called when user clicks "Create stream" on step 3; use to open success modal. */
+  /** Called when user completes the flow and clicks "Create stream" on step 3. Use to show success modal. */
   onStreamCreated?: () => void;
 }
 
@@ -23,14 +31,64 @@ export default function CreateStreamModal({ isOpen, onClose, onStreamCreated }: 
   const [customStartDate, setCustomStartDate] = useState('');
   const [cliffEnabled, setCliffEnabled] = useState(false);
   const [cliffDate, setCliffDate] = useState('');
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(1);
   const [error, setError] = useState<string | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const userDeposit = 200.0;
   const requiredDeposit = (parseFloat(accrualRate || '0') * parseFloat(duration || '0')).toFixed(2);
   const displayDeposit = depositAmount.trim() ? parseFloat(depositAmount.replace(/,/g, '')).toFixed(2) : requiredDeposit;
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+      if (e.key === 'Tab') {
+        const focusable = modalRef.current?.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusable || focusable.length === 0) return;
+        const first = focusable[0] as HTMLElement;
+        const last = focusable[focusable.length - 1] as HTMLElement;
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  const validateStep1 = (): boolean => {
+    if (!recipient.trim()) {
+      setError('Recipient is required.');
+      return false;
+    }
+    if (!isValidStellarAddress(recipient.trim())) {
+      setError('Please enter a valid Stellar address (starts with G, 56 characters).');
+      return false;
+    }
+    const amount = parseFloat(depositAmount.replace(/,/g, ''));
+    if (!depositAmount.trim() || isNaN(amount) || amount <= 0) {
+      setError('Deposit amount must be a positive number.');
+      return false;
+    }
+    setError(null);
+    return true;
+  };
+
   const handleNext = () => {
+    if (currentStep === 1) {
+      if (!validateStep1()) return;
+      setCurrentStep(2);
+      return;
+    }
     if (currentStep === 2) {
       if (!accrualRate || parseFloat(accrualRate) <= 0) {
         setError('Stream rate must be greater than 0');
@@ -92,57 +150,144 @@ export default function CreateStreamModal({ isOpen, onClose, onStreamCreated }: 
   const handleBack = () => {
     if (currentStep === 3) {
       setCurrentStep(2);
+    } else if (currentStep === 2) {
+      setCurrentStep(1);
     } else {
-      onClose(); 
+      onClose();
     }
+  };
+
+  const handleCancel = () => {
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="modal-overlay create-stream-overlay" onClick={onClose}>
-      <div className="modal-content create-stream-modal" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
+      <div
+        className="modal-content create-stream-modal"
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-stream-title"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="modal-header">
-          <h2>Create stream</h2>
-          <button className="close-button" onClick={onClose} aria-label="Close modal">
+          <h2 id="create-stream-title">Create stream</h2>
+          <button type="button" className="close-button" onClick={onClose} aria-label="Close modal">
             <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        {/* Progress Tracker */}
+        {/* Progress: Step 1 Recipient & amount, Step 2 Rate & schedule, Step 3 Review & create */}
         <div className="progress-tracker">
-          <div className="progress-line" ><div className="progress-line-fill" style={{ width: currentStep === 2 ? '50%' : '100%' }} /></div>
-          
-          <div className="step-item completed">
-            <div className="step-circle">
+          <div className="progress-line">
+            <div className="progress-line-fill" style={{ width: currentStep === 1 ? '0%' : currentStep === 2 ? '50%' : '100%' }} />
+          </div>
+          <div className={`step-item ${currentStep === 1 ? 'active' : currentStep > 1 ? 'completed' : ''}`}>
+            <div className="step-circle">{currentStep > 1 ? (
               <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-            </div>
-            <div className="step-label">Recipient &<br/>amount</div>
+            ) : '1'}</div>
+            <div className="step-label">Recipient &<br />amount</div>
           </div>
-
-          <div className={`step-item ${currentStep > 2 ? 'completed' : 'active'}`}>
-            <div className="step-circle">
-              {currentStep > 2 ? (
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              ) : "2"}
-            </div>
-            <div className="step-label">Rate &<br/>schedule</div>
+          <div className={`step-item ${currentStep === 2 ? 'active' : currentStep > 2 ? 'completed' : ''}`}>
+            <div className="step-circle">{currentStep > 2 ? (
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            ) : '2'}</div>
+            <div className="step-label">Rate &<br />schedule</div>
           </div>
-
           <div className={`step-item ${currentStep === 3 ? 'active' : ''}`}>
             <div className="step-circle">3</div>
-            <div className="step-label">Review &<br/>create</div>
+            <div className="step-label">Review &<br />create</div>
           </div>
         </div>
 
         <div className="modal-body-scroll">
+        {currentStep === 1 && (
+          <>
+            <hr className="divider" />
+            <div className="section-header">
+              <h3>Recipient & amount</h3>
+              <p>Set who receives the stream and how much USDC to lock.</p>
+            </div>
+            {error && (
+              <div className="form-error" role="alert">
+                {error}
+              </div>
+            )}
+            <div className="form-group">
+              <label htmlFor="create-stream-recipient" className="form-label">
+                Recipient <span className="required" aria-hidden="true">*</span>
+              </label>
+              <div className="input-container">
+                <div className="input-icon" aria-hidden="true">
+                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <input
+                  id="create-stream-recipient"
+                  type="text"
+                  className="input-field"
+                  value={recipient}
+                  onChange={(e) => {
+                    setRecipient(e.target.value);
+                    if (error) setError(null);
+                  }}
+                  placeholder="Paste Stellar address (G...)"
+                  autoComplete="off"
+                  aria-required="true"
+                  aria-invalid={!!(error && error.includes('Recipient'))}
+                  aria-describedby="create-stream-recipient-helper"
+                />
+              </div>
+              <span id="create-stream-recipient-helper" className="form-helper">
+                Recipient will be able to withdraw accrued USDC over time.
+              </span>
+            </div>
+            <div className="form-group">
+              <label htmlFor="create-stream-deposit" className="form-label">
+                Deposit amount <span className="required" aria-hidden="true">*</span>
+              </label>
+              <div className="input-container input-with-prefix-suffix">
+                <span className="input-prefix" aria-hidden="true">$</span>
+                <input
+                  id="create-stream-deposit"
+                  type="text"
+                  inputMode="decimal"
+                  className="input-field"
+                  value={depositAmount}
+                  onChange={(e) => {
+                    const v = e.target.value.replace(/[^0-9.]/g, '');
+                    setDepositAmount(v);
+                    if (error) setError(null);
+                  }}
+                  placeholder="0.00"
+                  aria-required="true"
+                  aria-invalid={!!(error && error.includes('Deposit'))}
+                  aria-describedby="create-stream-deposit-helper"
+                />
+                <span className="input-suffix-pill">USDC</span>
+              </div>
+              <span id="create-stream-deposit-helper" className="form-helper">
+                Total USDC locked for this stream. Must cover full duration at chosen rate.
+              </span>
+            </div>
+            <div className="info-box" role="region" aria-labelledby="info-box-title">
+              <div id="info-box-title" className="info-box-title">Smart contract lock:</div>
+              <p className="info-box-text">
+                Your USDC will be locked in a Soroban smart contract. The recipient can withdraw their accrued portion at any time.
+              </p>
+            </div>
+          </>
+        )}
         {currentStep === 2 && (
           <>
             <hr className="divider" />
@@ -153,7 +298,7 @@ export default function CreateStreamModal({ isOpen, onClose, onStreamCreated }: 
         </div>
 
         {error && (
-          <div style={{ color: 'var(--danger)', fontSize: '0.875rem', marginBottom: '1rem', padding: '0.75rem', background: 'rgba(255, 77, 79, 0.1)', borderRadius: '8px', border: '1px solid var(--danger)' }}>
+          <div className="form-error" role="alert">
             {error}
           </div>
         )}
@@ -413,18 +558,51 @@ export default function CreateStreamModal({ isOpen, onClose, onStreamCreated }: 
 
         {/* Footer */}
         <div className="modal-footer">
-          <button type="button" className="btn btn-back" onClick={handleBack} disabled={isSubmitting}>
-            Back
-          </button>
-          <button
-            type="button"
-            className="btn btn-next"
-            onClick={handleNext}
-            disabled={isSubmitting}
-            aria-busy={isSubmitting}
-          >
-            {currentStep === 3 && isSubmitting ? 'Creating…' : currentStep === 2 ? 'Next' : 'Create stream'}
-          </button>
+          {currentStep === 1 ? (
+            <>
+              <button
+                type="button"
+                className="btn btn-cancel"
+                onClick={handleCancel}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn btn-next"
+                onClick={handleNext}
+                disabled={isSubmitting}
+                aria-busy={isSubmitting && currentStep === 3}
+              >
+                Next
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                className="btn btn-back"
+                onClick={handleBack}
+                disabled={isSubmitting}
+              >
+                Back
+              </button>
+              <button
+                type="button"
+                className="btn btn-next"
+                onClick={handleNext}
+                disabled={isSubmitting}
+                aria-busy={isSubmitting && currentStep === 3}
+              >
+                {currentStep === 3 && isSubmitting
+                  ? 'Creating…'
+                  : currentStep === 2
+                  ? 'Next'
+                  : 'Create stream'}
+              </button>
+            </>
+          )}
         </div>
 
       </div>

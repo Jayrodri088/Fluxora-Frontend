@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
@@ -8,6 +8,7 @@ import ConnectWallet from "./pages/ConnectWallet";
 import { useState, useEffect } from "react";
 import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
+import ErrorPage from './pages/ErrorPage';
 import NotFound from "./pages/NotFound";
 
 export default function App() {
@@ -47,6 +48,8 @@ export default function App() {
         "--cta-shadow",
         "0 4px 12px rgba(0, 212, 170, 0.2)",
       );
+      root.style.setProperty("--network-testnet-bg", "#fef3c7");
+      root.style.setProperty("--network-testnet-text", "#92400e");
     } else {
       root.style.setProperty("--bg", "#0a0e17");
       root.style.setProperty("--surface", "#121a2a");
@@ -70,6 +73,8 @@ export default function App() {
         "--cta-shadow",
         "0 4px 12px rgba(0, 212, 170, 0.3)",
       );
+      root.style.setProperty("--network-testnet-bg", "rgba(250,224,141,0.15)");
+      root.style.setProperty("--network-testnet-text", "#fbd96a");
     }
   }, [theme]);
 
@@ -79,10 +84,13 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      {/* always show the top navbar */}
+      <Navbar onThemeToggle={handleThemeToggle} theme={theme} />
+
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route element={<Layout />} />
-        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Navigate to="/app" replace />} />
+        <Route path="/streams" element={<Navigate to="/app/streams" replace />} />
         <Route
           path="/landing"
           element={
@@ -92,12 +100,14 @@ export default function App() {
             </>
           }
         />
-        <Route path="/connect-wallet" element={<ConnectWallet />} />
-        <Route path="/app" element={<Layout />}>
+        <Route path="/app" element={<Layout onThemeToggle={handleThemeToggle} theme={theme} />}>
           <Route index element={<Dashboard />} />
           <Route path="streams" element={<Streams />} />
           <Route path="recipient" element={<Recipient />} />
+          <Route path="treasurypage" element={<TreasuryPage />} />
+          <Route path="error" element={<ErrorPage />} />
         </Route>
+        <Route path="/connect-wallet" element={<ConnectWallet />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

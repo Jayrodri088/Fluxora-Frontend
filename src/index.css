@@ -29,6 +29,23 @@
   --cta-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
 }
 
+:root {
+  --card-gradient: linear-gradient(
+    135deg,
+    #142033 0%,
+    #0f1726 60%,
+    #0b1220 100%
+  );
+
+  --accent-gradient: linear-gradient(135deg, #2dd4bf 0%, #0ea5e9 100%);
+
+  --accent-border: #4fd1c5;
+
+  --accent-glow: 0 0 20px rgba(45, 212, 191, 0.35);
+
+  --accent-soft: #7dd3fc;
+}
+
 * {
   box-sizing: border-box;
 }

@@ -1,57 +1,45 @@
-import RecentStreams, { Stream } from "../components/RecentStreams";
-import CreateStreamModal from "../components/CreateStreamModal";
-import React, { useEffect, useState } from "react";
-import TreasuryOverviewLoading from "../components/TreasuryOverviewLoading";
+import React, { useEffect, useState } from 'react';
+import RecentStreams, { Stream } from '../components/RecentStreams';
+import CreateStreamModal from '../components/CreateStreamModal';
+import TreasuryOverviewLoading from '../components/TreasuryOverviewLoading';
+import TreasuryEmptyState from '../components/TreasuryEmptyState';
 
 export default function Dashboard() {
-  // `loading` reflects when treasury data is being fetched.
-  // Replace this hook with your real data-loading flag when integrating.
   const [loading, setLoading] = useState(true);
-  const sampleStreams: Stream[] = [
-    {
-      id: "STR-001",
-      name: "Dev Grant - Alice",
-      recipient: "GABC...xyz1",
-      rate: "5,000 USDC/mo",
-      status: "Active",
-    },
-    {
-      id: "STR-002",
-      name: "Marketing Budget",
-      recipient: "GDEF...abc2",
-      rate: "3,200 USDC/mo",
-      status: "Active",
-    },
-    {
-      id: "STR-003",
-      name: "Core Contributor",
-      recipient: "GHIJ...def3",
-      rate: "8,500 USDC/mo",
-      status: "Paused",
-    },
-    {
-      id: "STR-004",
-      name: "Community Rewards",
-      recipient: "GKLM...ghi4",
-      rate: "1,200 USDC/mo",
-      status: "Active",
-    },
-    {
-      id: "STR-005",
-      name: "Q4 2025 Grant",
-      recipient: "GNOP...jkl5",
-      rate: "10,000 USDC/mo",
-      status: "Completed",
-    },
-  ];
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [streams] = useState<Stream[]>([]);
 
   useEffect(() => {
     // Demo: simulate async fetch — remove when wiring real fetch.
-    const t = setTimeout(() => setLoading(false), 5000);
+    const t = setTimeout(() => {
+      // For testing empty state, we keep it empty. 
+      // To see the data state, uncomment the following:
+      /*
+      setStreams([
+        {
+          id: "STR-001",
+          name: "Dev Grant - Alice",
+          recipient: "GABC...xyz1",
+          rate: "5,000 USDC/mo",
+          status: "Active",
+        },
+        {
+          id: "STR-002",
+          name: "Marketing Budget",
+          recipient: "GDEF...abc2",
+          rate: "3,200 USDC/mo",
+          status: "Active",
+        },
+      ]);
+      */
+      setLoading(false);
+    }, 2000);
     return () => clearTimeout(t);
   }, []);
 
   if (loading) return <TreasuryOverviewLoading />;
+
+  const hasStreams = streams.length > 0;
 
   return (
     <div>
@@ -63,7 +51,7 @@ export default function Dashboard() {
       <div style={cardGrid}>
         <div style={card}>
           <div style={cardLabel}>Active Streams</div>
-          <div style={cardValue}>—</div>
+          <div style={cardValue}>{streams.length || "—"}</div>
         </div>
         <div style={card}>
           <div style={cardLabel}>Total Streaming</div>
@@ -75,11 +63,26 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <RecentStreams streams={sampleStreams} />
-      {/* <CreateStreamModal
+      {hasStreams ? (
+        <>
+          <RecentStreams streams={streams} />
+          <button
+            type="button"
+            style={createBtnStyle}
+            onClick={() => setIsModalOpen(true)}
+            aria-label="Create stream"
+          >
+            Create stream
+          </button>
+        </>
+      ) : (
+        <TreasuryEmptyState onCreateStream={() => setIsModalOpen(true)} />
+      )}
+
+      <CreateStreamModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-      /> */}
+      />
     </div>
   );
 }

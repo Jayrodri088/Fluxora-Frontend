@@ -1,197 +1,167 @@
-import { useMemo, useState } from "react";
-import "./Recipient.css";
-
-type StreamStatus = "active" | "paused" | "completed";
-
-type Stream = {
-  id: string;
-  orgName: string;
-  address: string;
-  rate: string;
-  status: StreamStatus;
-  accrued: number;
-  withdrawable?: number;
-};
-
-const INITIAL_STREAMS: Stream[] = [
-  {
-    id: "stream-stellar-foundation",
-    orgName: "Stellar Foundation",
-    address: "GXYZ...abc1",
-    rate: "5,000 USDC/mo",
-    status: "active",
-    accrued: 15000,
-    withdrawable: 8500,
-  },
-  {
-    id: "stream-defi-dao-treasury",
-    orgName: "DeFi DAO Treasury",
-    address: "GABC...def2",
-    rate: "8,000 USDC/mo",
-    status: "active",
-    accrued: 12000,
-    withdrawable: 12000,
-  },
-  {
-    id: "stream-protocol-labs",
-    orgName: "Protocol Labs",
-    address: "GDEF...ghi3",
-    rate: "3,200 USDC/mo",
-    status: "paused",
-    accrued: 4250,
-    withdrawable: 2100,
-  },
-  {
-    id: "stream-ecosystem-fund",
-    orgName: "Ecosystem Fund",
-    address: "GHIJ...jk14",
-    rate: "4,000 USDC/mo",
-    status: "completed",
-    accrued: 12000,
-  },
-];
-
-function formatUsdc(amount: number) {
-  return `${amount.toLocaleString()} USDC`;
-}
-
-function StatusPill({ status }: { status: StreamStatus }) {
-  if (status === "active") {
-    return (
-      <span className="recipient-status recipient-status-active">
-        <span className="recipient-status-dot" aria-hidden="true" />
-        Active
-      </span>
-    );
-  }
-
-  if (status === "paused") {
-    return (
-      <span className="recipient-status recipient-status-paused">
-        <svg viewBox="0 0 24 24" className="recipient-status-icon" aria-hidden="true">
-          <rect x="7" y="5" width="3" height="14" rx="1" />
-          <rect x="14" y="5" width="3" height="14" rx="1" />
-        </svg>
-        Paused
-      </span>
-    );
-  }
-
-  return (
-    <span className="recipient-status recipient-status-completed">
-      <svg viewBox="0 0 24 24" className="recipient-status-icon" aria-hidden="true">
-        <circle cx="12" cy="12" r="8" fill="none" strokeWidth="2" />
-        <path d="M9 12.3l2 2 4-4" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-      Completed
-    </span>
-  );
-}
-
-function WithdrawIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="recipient-withdraw-icon" aria-hidden="true">
-      <path d="M12 5v10" fill="none" strokeWidth="2" strokeLinecap="round" />
-      <path d="M8.5 11.5L12 15l3.5-3.5" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M5 19h14" fill="none" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 export default function Recipient() {
-  const [streams, setStreams] = useState<Stream[]>(INITIAL_STREAMS);
+  const balance: number = 22600.0;
+  const activeStreams = 2;
+  const totalAccrued = 43250.0;
+  const totalWithdrawn = 20650.0;
+  const walletConnected = true;
 
-  const hasStreams = useMemo(() => streams.length > 0, [streams.length]);
-
-  const handleWithdraw = (streamId: string) => {
-    setStreams((current) =>
-      current.map((stream) => {
-        if (stream.id !== streamId) return stream;
-        if (!stream.withdrawable || stream.withdrawable <= 0) return stream;
-
-        return {
-          ...stream,
-          accrued: Math.max(0, stream.accrued - stream.withdrawable),
-          withdrawable: 0,
-        };
-      }),
-    );
-  };
+  const disabled = !walletConnected || balance === 0;
 
   return (
-    <section className="recipient-streams-section" aria-labelledby="your-streams-title">
-      <h1 id="your-streams-title" className="recipient-streams-title">
+    <div>
+      <h1 style={{ marginTop: 0, fontSize: "2rem", fontWeight: 700 }}>
         Your streams
       </h1>
+      <p style={{ color: "var(--muted)", marginBottom: "2rem" }}>
+        View your incoming streams and withdraw accrued USDC at any time.
+      </p>
+      <div style={card}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "1rem",
+          }}
+        >
+          <div>
+            <div style={cardLabel}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="20px"
+                viewBox="0 -960 960 960"
+                width="20px"
+                fill="var(--accent-soft)"
+              >
+                <path d="m136-240-56-56 296-298 160 160 208-206H640v-80h240v240h-80v-104L536-320 376-480 136-240Z" />
+              </svg>{" "}
+              WITHDRAWABLE BALANCE
+            </div>
+            <div style={cardValue}>
+              {balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              <span
+                style={{
+                  fontSize: "2rem",
+                  color: "var(--muted)",
+                  fontWeight: 500,
+                }}
+              >
+                USDC
+              </span>
+            </div>
+            <div style={{ color: "var(--muted)", fontSize: "0.9rem" }}>
+              Available to withdraw immediately
+            </div>
+          </div>
+          <button style={button(disabled)} disabled={disabled}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="15px"
+              viewBox="0 -960 960 960"
+              width="15px"
+              fill="white"
+            >
+              <path d="M160-160v-640 640Zm0 80q-33 0-56.5-23.5T80-160v-640q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v320h-80v-320H160v640h200v80H160Zm72-140h16q14 0 23-9t9-23v-48h80v-80h-80v-120h480v-16l-66-192q-5-14-16.5-23t-25.5-9H308q-14 0-25.5 9T266-708l-66 192v264q0 14 9 23t23 9Zm74-360 28-80h292l28 80H306Zm82.5 168.5Q400-423 400-440t-11.5-28.5Q377-480 360-480t-28.5 11.5Q320-457 320-440t11.5 28.5Q343-400 360-400t28.5-11.5ZM557-140h246q5-21 20.5-36.5T860-197v-86q-21-5-36.5-20.5T803-340H557q-5 21-20.5 36.5T500-283v86q21 5 36.5 20.5T557-140Zm165.5-57.5Q740-215 740-240t-17.5-42.5Q705-300 680-300t-42.5 17.5Q620-265 620-240t17.5 42.5Q655-180 680-180t42.5-17.5ZM520-80q-33 0-56.5-23.5T440-160v-160q0-33 23.5-56.5T520-400h320q33 0 56.5 23.5T920-320v160q0 33-23.5 56.5T840-80H520Z" />
+            </svg>
+            Withdraw USDC
+          </button>
+        </div>
 
-      <div className="recipient-table-wrap">
-        {hasStreams ? (
-          <table className="recipient-streams-table" role="table">
-            <thead>
-              <tr>
-                <th scope="col">FROM</th>
-                <th scope="col">RATE</th>
-                <th scope="col">STATUS</th>
-                <th scope="col" className="recipient-col-right">
-                  ACCRUED
-                </th>
-                <th scope="col" className="recipient-col-right">
-                  ACTIONS
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {streams.map((stream) => {
-                const canWithdraw = Boolean(stream.withdrawable && stream.withdrawable > 0);
+        <div style={divider} />
+        <div style={statsRow}>
+          <div>
+            <div style={statLabel}>Active streams</div>
+            <div style={statValue}>{activeStreams}</div>
+          </div>
 
-                return (
-                  <tr key={stream.id}>
-                    <td data-label="FROM">
-                      <div className="recipient-from-name">{stream.orgName}</div>
-                      <div className="recipient-from-address">{stream.address}</div>
-                    </td>
-                    <td data-label="RATE">
-                      <span className="recipient-rate">{stream.rate}</span>
-                    </td>
-                    <td data-label="STATUS">
-                      <StatusPill status={stream.status} />
-                    </td>
-                    <td data-label="ACCRUED" className="recipient-col-right">
-                      <div className="recipient-accrued">{formatUsdc(stream.accrued)}</div>
-                      {stream.status !== "completed" ? (
-                        <div className="recipient-withdrawable">
-                          {canWithdraw ? formatUsdc(stream.withdrawable as number) : "0 USDC"} withdrawable
-                        </div>
-                      ) : null}
-                    </td>
-                    <td data-label="ACTIONS" className="recipient-col-right">
-                      {stream.status !== "completed" ? (
-                        canWithdraw ? (
-                          <button
-                            type="button"
-                            className="recipient-withdraw-btn"
-                            onClick={() => handleWithdraw(stream.id)}
-                            aria-label={`Withdraw from ${stream.orgName}`}
-                          >
-                            <WithdrawIcon />
-                            Withdraw
-                          </button>
-                        ) : (
-                          <span className="recipient-no-withdraw">Nothing to withdraw</span>
-                        )
-                      ) : (
-                        <span className="recipient-no-withdraw">Nothing to withdraw</span>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        ) : (
-          <p className="recipient-empty-state">No streams yet.</p>
-        )}
+          <div>
+            <div style={statLabel}>Total accrued</div>
+            <div style={statValue}>
+              {totalAccrued.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              })}{" "}
+              USDC
+            </div>
+          </div>
+
+          <div>
+            <div style={statLabel}>Total withdrawn</div>
+            <div style={statValue}>
+              {totalWithdrawn.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              })}{" "}
+              USDC
+            </div>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
+
+const card: React.CSSProperties = {
+  marginTop: "1.5rem",
+  maxWidth: 900,
+  width: "100%",
+  background: "var(--card-gradient)",
+  border: "1px solid var(--border)",
+  borderRadius: 20,
+  padding: "2rem",
+};
+
+const cardLabel: React.CSSProperties = {
+  fontSize: "0.875rem",
+  color: "var(--accent-soft)",
+  marginBottom: "0.25rem",
+  textTransform: "uppercase",
+  letterSpacing: "0.08em",
+  fontWeight: 600,
+};
+
+const cardValue: React.CSSProperties = {
+  fontSize: "3rem",
+  fontWeight: 700,
+  marginBottom: "0.5rem",
+};
+
+const button = (disabled: boolean): React.CSSProperties => ({
+  padding: "0.75rem 1rem",
+  background: disabled ? "var(--surface)" : "var(--accent-gradient)",
+  color: disabled ? "var(--muted)" : "white",
+  border: "1px solid var(--accent-border)",
+  borderRadius: 12,
+  fontWeight: 600,
+  cursor: disabled ? "not-allowed" : "pointer",
+  boxShadow: disabled ? "none" : "var(--accent-glow)",
+  height: 40,
+  width: 170,
+  transition: "all 0.2s ease",
+  display: "flex",
+  justifyContent: "space-between",
+  marginTop: 28,
+});
+
+const divider: React.CSSProperties = {
+  margin: "2rem 0 1.5rem",
+  height: 1,
+  background: "rgba(255, 255, 255, 0.06)",
+};
+
+const statsRow: React.CSSProperties = {
+  display: "flex",
+  justifyContent: "space-between",
+  flexWrap: "wrap",
+  gap: "2rem",
+  width: "80%",
+};
+
+const statLabel: React.CSSProperties = {
+  color: "var(--muted)",
+  fontSize: "0.85rem",
+  marginBottom: "0.4rem",
+};
+
+const statValue: React.CSSProperties = {
+  fontWeight: 600,
+  fontSize: "1.1rem",
+};

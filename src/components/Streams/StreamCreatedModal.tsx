@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './StreamCreatedModal.module.css';
 import successIcon from '../../assets/images/success.svg';
 
@@ -46,8 +46,8 @@ export default function StreamCreatedModal({
           </div>
           <div className={styles.urlContainer}>
             <div className={styles.urlBar}>{streamUrl}</div>
-            <button 
-              className={`${styles.copyButton} ${copied ? styles.copied : ''}`} 
+            <button
+              className={`${styles.copyButton} ${copied ? styles.copied : ''}`}
               onClick={handleCopy}
               aria-label="Copy stream URL"
             >
@@ -66,9 +66,9 @@ export default function StreamCreatedModal({
         </div>
 
         <div className={styles.nextStepsBox}>
-         
+
           <p className={styles.nextStepsText}>
-             <span className={styles.nextStepsTitle}>Next steps:</span> Share the stream link with your recipient. They can view real-time accrual and withdraw funds from the Recipient portal.
+            <span className={styles.nextStepsTitle}>Next steps:</span> Share the stream link with your recipient. They can view real-time accrual and withdraw funds from the Recipient portal.
           </p>
         </div>
 

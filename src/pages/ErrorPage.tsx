@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ErrorPage.css';
 
@@ -28,13 +27,13 @@ export default function ErrorPage({ onRetry, errorMessage }: ErrorPageProps) {
         <div className="error-icon-wrapper">
           <div className="error-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 8V12M12 16H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="red" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M12 8V12M12 16H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="red" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
         </div>
 
         <h1 className="error-heading">Something went wrong</h1>
-        
+
         <p className="error-description">
           {errorMessage || "We couldn't complete your request. Please try again or return to the dashboard."}
         </p>
@@ -46,7 +45,7 @@ export default function ErrorPage({ onRetry, errorMessage }: ErrorPageProps) {
             </svg>
             Try again
           </button>
-          
+
           <button className="btn-dashboard" onClick={handleBackToDashboard}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
